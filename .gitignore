@@ -1,0 +1,37 @@
+### Node.js and npm ###
+node_modules/
+npm-debug.log
+yarn-error.log
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+/out/
+/classes/
+/production/
+/.idea/
+
+### Eclipse ###
+.classpath
+.project
+.settings/
+/bin/
+/target/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/build/
+/nb-configuration.xml
+/nb-gradle/
+
+### Visual Studio Code ###
+.vscode/
+
+### OS-specific ###
+.DS_Store
+Thumbs.db

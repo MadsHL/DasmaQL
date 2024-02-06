@@ -1,0 +1,40 @@
+{
+  "name": "dasmaql",
+  "version": "0.1.0",
+  "description": "Self-contained query tool for data selection with a simple and intuitive language.",
+  "main": "index.js",
+  "scripts": {
+    "build-parsers": "node build-parsers.js",
+    "test": "npm run build-parsers && mocha test/**/*.js"
+  },
+  "keywords": [
+    "Dasma",
+    "DasmaQL",
+    "parser",
+    "query language",
+    "query autocomplete",
+    "query suggestion",
+    "syntax highlighter",
+    "query parser",
+    "data analysis",
+    "data query",
+    "SQL",
+    "query processing",
+    "database query",
+    "syntax processing",
+    "highlighting",
+    "code highlighting",
+    "text analysis",
+    "data extraction",
+    "data manipulation",
+    "programming language",
+    "data science"
+  ],
+  "author": "Mads Hansen Lund",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "assert": "^2.1.0",
+    "mocha": "^10.2.0",
+    "peggy": "^3.0.2"
+  }
+}
