@@ -1,8 +1,8 @@
 {
   "name": "dasmaql",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Self-contained query tool for data selection with a simple and intuitive language.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "build-parsers": "node build-parsers.js",
     "test": "npm run build-parsers && mocha test/**/*.js"
