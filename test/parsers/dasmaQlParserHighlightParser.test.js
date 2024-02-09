@@ -1,5 +1,4 @@
 const assert = require("assert");
-const {dasmaQlParser} = require("../../src");
 const {dasmaQlHighlightParser} = require("../../src/parsers");
 const {dasmaQlHighlightProcessor} = require("../../src/processors");
 

@@ -1,5 +1,5 @@
 const assert = require('assert');
-const dasmaQl = require("../../src/modules/dasmaQl");
+const dasmaQl = require("../../src/");
 
 describe('DasmaQL', function () {
     it('should parse a valid query string with options', () => {
