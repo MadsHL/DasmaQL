@@ -81,12 +81,27 @@ Operator
     return options.suggest(location(), input, ["=", "!=", "<>", ">=", "<=", ">", "<", "~"]);
   }
 
+Term
+  = field:Field __ Operator __ parameter:Parameter {
+      return options.suggestParameter(options, location(), field, parameter)
+  }
+  / field:Field _ ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
+      return parameters.map(parameter => options.suggestParameter(options, location(), field, parameter));
+  }
+  / field:Field _ (ComplexOperator)
+  / field:Field __ (Operator)?
+
 Field
   = input:([a-zA-Z0-9_]+) { return options.suggestField(options, location(), input); }
-  / input:('"' Chars '"'?) { return options.suggestField(options, location(), input); }
+  / input:String { return options.suggestField(options, location(), input); }
 
 Parameter
-  = input:(__ (([a-zA-Z0-9_]+) / ('"' Chars '"'?))) { return options.parameter(location(), input); }
+  = Date { return options.parameter(location(), 'date', text()); }
+  / Time { return options.parameter(location(), 'time', text()); }
+  / Number { return options.parameter(location(), 'number', text()); }
+  / String { return options.parameter(location(), 'string', text()); }
+  / [a-zA-Z0-9_]+ ("("__")")  { return options.parameter(location(), 'function', text()); }
+  / [a-zA-Z0-9_]+ { return options.parameter(location(), 'unknown', text()); }
 
 Parameters
   = parameter:Parameter __ (_ "AND" _ / __ "," __) __ rest:Parameters? {
@@ -97,25 +112,58 @@ Parameters
   }
 
 
-Term
-  = field:Field __ Operator __ parameter:Parameter? {
-      return options.suggestParameter(options, location(), field, parameter)
-  }
-  / field:Field _ ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
-      return parameters.map(parameter => options.suggestParameter(options, location(), field, parameter));
-  }
-  / field:Field _ (ComplexOperator)
-  / field:Field __ (Operator)?
-
-
 Chars
-  = char:[^"\r\n]+ { return char; }
+  = char:[^\r\n]+ { return char; }
+
+Number
+  = (Float / Integer) { return text(); }
+
+Float
+  = Integer "." [0-9]* / Integer "."
+
+Integer
+  = "0" / [1-9] [0-9]*
+
+
+String
+  = '"' string:DoubleQuotedChars '"'? { return text(); }
+  / "'" string:SingleQuotedChars "'"? { return text(); }
+
+DoubleQuotedChars
+  = char:[^"\r\n]+ { return char.join(""); }
+
+SingleQuotedChars
+  = char:[^'\r\n]+ { return char.join(""); }
+
+
+Date
+  = '"' DateFormat '"'? { return text(); }
+  / "'" DateFormat "'"? { return text(); }
+  / DateFormat { return text(); }
+
+DateFormat
+  = day:Day "/" month:Month "/" year:Year { return year + "-" + month + "-" + day }
+  / day:Day "-" month:Month "-" year:Year { return year + "-" + month + "-" + day }
+  / year:Year "/" month:Month "/" day:Day { return year + "-" + month + "-" + day }
+  / year:Year "-" month:Month "-" day:Day { return year + "-" + month + "-" + day }
+
+Day
+  = day:("0" [1-9] / [1-2][0-9] / "3" [0-1]) { return day.join("") }
+
+Month
+  = month:("0" [1-9] / "1" [0-2]) { return month.join("") }
+
+Year
+  = year:([0-9][0-9][0-9][0-9]) { return year.join("") }
+
+Time
+  = Integer ("m"i / "h"i / "d"i / "y"i) { return text() }
 
 FallBack
   = . { return null }
 
 Comment
-  = ("#" / "--") [^\r\n]* { return null }
+  = input:(("#" / "--") [^\r\n]*) { return { type: "comment", input } }
 
 __ "optional whitespace"
   = [ \t\r\n]*

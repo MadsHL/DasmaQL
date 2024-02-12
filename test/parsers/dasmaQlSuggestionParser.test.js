@@ -6,18 +6,30 @@ const {dasmaQlSuggestionProcessor} = require("../../src/processors");
 describe('Suggestion parsing tests', function () {
 
     it('parses Logic with AND operator correctly', function () {
-        const input = 'field = "value" AND otherField != "otherValue" O';
+        const input = 'field = "value" AND "other field" != "otherValue" O';
         const result = dasmaQlSuggestionParser.parse(input, dasmaQlSuggestionProcessor);
         // Tilpas denne del baseret på den forventede struktur af dit output
         assert.ok(result.length === 4, 'Parser output should have exactly 4 elements');
-        assert.deepStrictEqual(result[0], {
+        assert.deepStrictEqual(result[0],{
             "type": "parameter",
-            "field": "field",
-            "input": "value",
-            "location": {
-                "line": 0,
-                "start": 8,
-                "end": 15
+            "field": {
+                "type": "field",
+                "input": "field",
+                "location": {
+                    "line": 0,
+                    "start": 0,
+                    "end": 5
+                },
+                "suggestions": []
+            },
+            "input": {
+                "value": "value",
+                "type": "string",
+                "location": {
+                    "line": 0,
+                    "start": 8,
+                    "end": 15
+                }
             },
             "suggestions": []
         });
@@ -35,12 +47,24 @@ describe('Suggestion parsing tests', function () {
         });
         assert.deepStrictEqual(result[2], {
             "type": "parameter",
-            "field": "otherField",
-            "input": "otherValue",
-            "location": {
-                "line": 0,
-                "start": 34,
-                "end": 46
+            "field": {
+                "type": "field",
+                "input": "other field",
+                "location": {
+                    "line": 0,
+                    "start": 20,
+                    "end": 33
+                },
+                "suggestions": []
+            },
+            "input": {
+                "value": "otherValue",
+                "type": "string",
+                "location": {
+                    "line": 0,
+                    "start": 37,
+                    "end": 49
+                }
             },
             "suggestions": []
         })
@@ -49,8 +73,8 @@ describe('Suggestion parsing tests', function () {
             "input": "O",
             "location": {
                 "line": 0,
-                "start": 47,
-                "end": 48
+                "start": 50,
+                "end": 51
             },
             "suggestions": [
                 "OR",
@@ -95,7 +119,7 @@ describe('Suggestion parsing tests', function () {
         const input = 'field1 ';
         const result = dasmaQlSuggestionParser.parse(input, dasmaQlSuggestionProcessor);
         assert.strictEqual(result.length, 1, 'Expected a single suggestion for incomplete expression');
-        // Tilføj yderligere specifikke checks her, f.eks. kontrol af forslagstypen eller inputværdien.
+
     });
 
     it('suggests order direction for incomplete ORDER BY clause', function () {
@@ -117,12 +141,12 @@ describe('Suggestion parsing tests', function () {
         }, 'Expected ASC suggestion for incomplete order direction');
     });
 
-    // Eksempel på yderligere test
     it('parses complex logic with multiple conditions', function () {
-        const input = 'field1 = "value1" OR field2 != "value2" AND (field3 in ("value3.1", "value3.2") OR field4 = "value4" AND field5 between (1,9)) ORDER BY field1, field2 asc, field3 desc';
+        const input = 'field1 = "value1" OR field2 != 2024-12-24 AND (field3 in ("value3.1", "value3.2") OR field4 = value4() AND field5 between (1,9)) ORDER BY field1, field2 asc, field3 desc -- This is a comment';
         const result = dasmaQlSuggestionParser.parse(input, dasmaQlSuggestionProcessor);
-        assert.strictEqual(result.length, 17);
-        assert.deepStrictEqual(result.map(t=>t.type),["parameter","misc","parameter","misc","parameter","parameter","misc","parameter","misc","parameter","parameter","misc","field","field","misc","field","misc"])
+        assert.strictEqual(result.length, 18);
+        assert.deepStrictEqual(result.map(t=>t.type),["parameter","misc","parameter","misc","parameter","parameter","misc","parameter","misc","parameter","parameter","misc","field","field","misc","field","misc","comment"])
+        assert.deepStrictEqual(result.filter(i => i.type === "parameter").map(i => i.input.type), ["string","date","string","string","function","number","number"]);
     });
 
     it('gracefully handles unrecognized input', function () {

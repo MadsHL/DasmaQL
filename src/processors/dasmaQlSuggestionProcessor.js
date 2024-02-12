@@ -53,16 +53,16 @@ const dasmaQlSuggestionProcessor = {
         const suggestions = self.findParameters(field.input, defaultParameter.input)
         return {
             type: "parameter",
-            field: field.input,
-            input: defaultParameter.input,
-            location: defaultParameter.location,
+            field: field,
+            input: defaultParameter,
             suggestions
         }
     },
-    parameter: (location, input) => {
+    parameter: (location, type, input) => {
         const parameter = flattenInput(input);
         return {
-            input: parameter,
+            value: parameter,
+            type: type,
             location: parseLocation(location)
         }
     },

@@ -540,7 +540,7 @@ const dasmaQlParserTestCases = [
             }
         },
         {
-            expression: '(field1 = "value1" OR field2 != "value2") AND (field3 in ("value3.1", "value3.2") OR field4 = "value4" AND field5 between (1,9)) ORDER BY field1, field2 asc, field3 desc',
+            expression: '(field1 = "value1" OR field2 != 2024-12-24) AND (field3 in ("value3.1", "value3.2") OR field4 = 10m AND field5 between (1,9)) ORDER BY field1, field2 asc, field3 desc',
             expected: {
                 "expression": {
                     "operator": {
@@ -564,8 +564,8 @@ const dasmaQlParserTestCases = [
                                             "type": "not_equal",
                                             "field": "field2",
                                             "value": {
-                                                "type": "string",
-                                                "value": "value2"
+                                                "type": "date",
+                                                "value": "2024-12-24"
                                             }
                                         }
                                     }
@@ -600,8 +600,8 @@ const dasmaQlParserTestCases = [
                                                     "type": "equal",
                                                     "field": "field4",
                                                     "value": {
-                                                        "type": "string",
-                                                        "value": "value4"
+                                                        "type": "time",
+                                                        "value": "10M"
                                                     }
                                                 }
                                             },

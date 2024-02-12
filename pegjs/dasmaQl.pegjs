@@ -59,10 +59,10 @@ TermNotBetween
   / field:TermField _ ("NOT BETWEEN"i) _ from:TermValue _ ("AND"i) _ to:TermValue __ { return options.termPair(options, "not_between", field, from, to); }
 
 TermLike
-        = field:TermField _ ("LIKE"i) _ "\"" value:Chars "\"" { return options.term(options, "like", field, value); }
+        = field:TermField _ ("LIKE"i) _ value:String { return options.term(options, "like", field, value); }
 
 TermNotLike
-        = field:TermField _ ("NOT LIKE"i) _ "\"" value:Chars "\"" { return options.term(options, "not_like", field, value); }
+        = field:TermField _ ("NOT LIKE"i) _ value:String { return options.term(options, "not_like", field, value); }
 
 TermValueList
   = value:TermValue __ values:(__ "," __ TermValue)* {
@@ -85,8 +85,10 @@ Operator
   / "~" { return "like" }
 
 TermValue
-  = "\"" value:Chars "\"" { return options.parameter(options, "string", value); }
+  = value:Time { return options.parameter(options, "time", value); }
+  / value:Date { return options.parameter(options, "date", value); }
   / value:Number { return options.parameter(options, "number", value); }
+  / value:String { return options.parameter(options, "string", value); }
   / functionName:FunctionName "(" __ ")" { return options.parameter(options, "function", functionName); }
 
 FunctionName
@@ -105,10 +107,41 @@ Integer
 
 TermField
   = field:[a-zA-Z0-9_]+ { return field.join(""); }
-  / "\"" field:Chars "\"" { return field; }
+  / field:String { return field; }
 
-Chars
-  = char:[^"]+ { return char.join(""); }
+Date
+  = '"' date:DateFormat '"' { return date; }
+  / "'" date:DateFormat "'" { return date; }
+  / date:DateFormat { return date; }
+
+DateFormat
+  = day:Day "/" month:Month "/" year:Year { return year + "-" + month + "-" + day }
+  / day:Day "-" month:Month "-" year:Year { return year + "-" + month + "-" + day }
+  / year:Year "/" month:Month "/" day:Day { return year + "-" + month + "-" + day }
+  / year:Year "-" month:Month "-" day:Day { return year + "-" + month + "-" + day }
+
+Day
+  = day:("0" [1-9] / [1-2][0-9] / "3" [0-1]) { return day.join("") }
+
+Month
+  = month:("0" [1-9] / "1" [0-2]) { return month.join("") }
+
+Year
+  = year:([0-9][0-9][0-9][0-9]) { return year.join("") }
+
+Time
+  = Integer ("m"i / "h"i / "d"i / "y"i) { return text().toUpperCase() }
+
+
+String
+  = '"' string:DoubleQuotedChars '"'? { return string }
+  / "'" string:SingleQuotedChars "'"? { return string }
+
+DoubleQuotedChars
+  = char:[^"\r\n]+ { return char.join(""); }
+
+SingleQuotedChars
+  = char:[^'\r\n]+ { return char.join(""); }
 
 __ "optional whitespace"
   = ([ \t\r\n]*)
