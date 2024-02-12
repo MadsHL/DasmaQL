@@ -3,11 +3,9 @@
  */
 
 const dasmaQlParser = require('./dasmaQlParser');
-const dasmaQlHighlightParser = require('./dasmaQlHighlightParser');
 const dasmaQlSuggestionParser = require('./dasmaQlSuggestionParser');
 
 module.exports = {
     dasmaQlParser,
-    dasmaQlHighlightParser,
     dasmaQlSuggestionParser,
 };

@@ -6,43 +6,45 @@ function parseLocation(location) {
     }
 }
 
-function flattenInput(input) {
+function flattenInput(input, withQoutes) {
     if (!input) {
         return "";
     }
+    let result = input;
     if (Array.isArray(input)) {
         const flattened = input.reduce((acc, val) => acc.concat(flattenInput(val)), []);
-        return flattened.join("");
-    } else if (typeof input === 'string') {
-        return input.replace(/"/g, "");
+        result = flattened.join("");
     }
-    return input;
+    return withQoutes ? result : cleanString(result);
+}
+
+function cleanString(str) {
+    return str?.replace(/^['"]|['"]$/g, '');
 }
 
 const dasmaQlSuggestionProcessor = {
-    suggest: (location, input, suggestions) => {
+    suggest: (location, input, suggestions, type) => {
         const inputStr = flattenInput(input);
         return {
-            type: "misc",
+            type: type || "misc",
             input: inputStr,
             location: parseLocation(location),
             suggestions
         }
     },
     suggestField: (self, location, input) => {
-        const inputStr = flattenInput(input);
-        const suggestions = self.findFields(inputStr)
+        const inputStr = flattenInput(input, self.withQoutes);
         return {
             type: "field",
             input: inputStr,
             location: parseLocation(location),
-            suggestions
+            suggestions: () => self.findFields(inputStr)
         }
     },
-    suggestParameter: (self, location, field, parameter) => {
+    suggestParameter: (self, location, field, operator, parameter) => {
 
         const defaultParameter = parameter ? parameter : {
-            input: "",
+            value: "", type: "unknown",
             location: {
                 line: location.start.line - 1,
                 start: location.end.offset,
@@ -50,16 +52,16 @@ const dasmaQlSuggestionProcessor = {
             }
         }
 
-        const suggestions = self.findParameters(field.input, defaultParameter.input)
         return {
             type: "parameter",
-            field: field,
+            field,
+            operator,
             input: defaultParameter,
-            suggestions
+            suggestions: () => self.findParameters(field.input, defaultParameter.value)
         }
     },
-    parameter: (location, type, input) => {
-        const parameter = flattenInput(input);
+    parameter: (self, location, type, input) => {
+        const parameter = flattenInput(input, self.withQoutes);
         return {
             value: parameter,
             type: type,

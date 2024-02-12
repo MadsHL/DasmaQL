@@ -82,11 +82,11 @@ Operator
   }
 
 Term
-  = field:Field __ Operator __ parameter:Parameter {
-      return options.suggestParameter(options, location(), field, parameter)
+  = field:Field __ operator:Operator __ parameter:Parameter {
+      return options.suggestParameter(options, location(), field, operator, parameter)
   }
-  / field:Field _ ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
-      return parameters.map(parameter => options.suggestParameter(options, location(), field, parameter));
+  / field:Field _ operator:ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
+      return parameters.map(parameter => options.suggestParameter(options, location(), field, operator, parameter));
   }
   / field:Field _ (ComplexOperator)
   / field:Field __ (Operator)?
@@ -96,12 +96,12 @@ Field
   / input:String { return options.suggestField(options, location(), input); }
 
 Parameter
-  = Date { return options.parameter(location(), 'date', text()); }
-  / Time { return options.parameter(location(), 'time', text()); }
-  / Number { return options.parameter(location(), 'number', text()); }
-  / String { return options.parameter(location(), 'string', text()); }
-  / [a-zA-Z0-9_]+ ("("__")")  { return options.parameter(location(), 'function', text()); }
-  / [a-zA-Z0-9_]+ { return options.parameter(location(), 'unknown', text()); }
+  = Date { return options.parameter(options, location(), 'date', text()); }
+  / Time { return options.parameter(options, location(), 'time', text()); }
+  / Number { return options.parameter(options, location(), 'number', text()); }
+  / String { return options.parameter(options, location(), 'string', text()); }
+  / [a-zA-Z0-9_]+ ("("__")")  { return options.parameter(options, location(), 'function', text()); }
+  / [a-zA-Z0-9_]+ { return options.parameter(options, location(), 'unknown', text()); }
 
 Parameters
   = parameter:Parameter __ (_ "AND" _ / __ "," __) __ rest:Parameters? {
@@ -126,8 +126,13 @@ Integer
 
 
 String
-  = '"' string:DoubleQuotedChars '"'? { return text(); }
-  / "'" string:SingleQuotedChars "'"? { return text(); }
+  = (DoubleQuotedString / SingleQuotedString) { return text(); }
+
+DoubleQuotedString
+  = ('"' string:DoubleQuotedChars '"'?) { return text(); }
+
+SingleQuotedString
+  = ("'" string:SingleQuotedChars "'"?) { return text(); }
 
 DoubleQuotedChars
   = char:[^"\r\n]+ { return char.join(""); }
@@ -163,7 +168,7 @@ FallBack
   = . { return null }
 
 Comment
-  = input:(("#" / "--") [^\r\n]*) { return { type: "comment", input } }
+  = input:(("#" / "--") [^\r\n]*) { return options.suggest(location(), input, [], "comment") }
 
 __ "optional whitespace"
   = [ \t\r\n]*

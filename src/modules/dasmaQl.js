@@ -1,23 +1,28 @@
-const {dasmaQlParser, dasmaQlHighlightParser} = require("../parsers");
-const {dasmaQlProcessor, dasmaQlHighlightProcessor} = require("../processors");
+const {dasmaQlParser, dasmaQlHighlightParser, dasmaQlSuggestionParser} = require("../parsers");
+const {dasmaQlProcessor, dasmaQlHighlightProcessor, dasmaQlSuggestionProcessor} = require("../processors");
+const dasmaQlHighlighter = require("./dasmaQlHighlighter");
 
 class DasmaQl {
 
+    #dasmaQlHighlighter
     #invalidFields = [];
     #invalidFunctions = [];
+    #suggestTokens = [];
+
+    #result = null;
 
     constructor(options) {
         this.options = this.#prepareOptions(options);
         this.syntaxProcessor = this.#configureSyntaxProcessor(this.options);
+        this.#dasmaQlHighlighter = dasmaQlHighlighter(options)
     }
 
-    highlight(qlString) {
-        return dasmaQlHighlightParser.parse(qlString, dasmaQlHighlightProcessor).join("");
-    }
 
     parse(qlString) {
         this.#invalidFields = [];
         this.#invalidFunctions = [];
+
+        const highlight =this.#dasmaQlHighlighter.highlight(qlString);
 
         let model = null;
         let error = null;
@@ -29,6 +34,7 @@ class DasmaQl {
 
         return {
             model,
+            highlight,
             validation: {
                 error,
                 valid: !error && !this.#invalidFields.length && !this.#invalidFunctions.length,
@@ -46,7 +52,7 @@ class DasmaQl {
 
     #configureSyntaxProcessor(options) {
         if (!options.validFields.length && options.validFunctions.length) {
-            return
+            return dasmaQlProcessor;
         }
 
         const syntaxProcessor = Object.assign({}, dasmaQlProcessor);
