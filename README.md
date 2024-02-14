@@ -46,7 +46,7 @@ This query checks for records where `field1` is equal to `"value1"` and `field2`
 
 ## Installation
 
-You can install DasmaQL via npm:
+You can install DasmaQL via npm [https://www.npmjs.com/package/dasmaql](https://www.npmjs.com/package/dasmaql):
 
 ```bash
 npm install dasmaql
