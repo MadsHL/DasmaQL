@@ -6,20 +6,16 @@ describe('DasmaQlAutocomplete', function() {
     let autocomplete;
 
     beforeEach(function() {
-        autocomplete = dasmaQlAutocomplete(sampleQlString, {
-            callbackSearchField: (searchString) => {
-                if(searchString.startsWith("field")) {
-                    return ["field1", "field2", "field3"]
-                }
-                return ["someDifferentField"]
-            },
+        autocomplete = dasmaQlAutocomplete({
+            fields: ["field1", "field2", "field3"],
             callbackSearchParameter: (field, searchString) => {
                 if(field === 'field1' && searchString === 'value1') {
                     return ['field1:value1', "field1:value2", "field1:value3"]
                 }
 
                 return ['value']
-            }
+            },
+            qlString: sampleQlString
         });
     });
 
@@ -27,7 +23,7 @@ describe('DasmaQlAutocomplete', function() {
         it('should return an array of suggestions for field', function() {
             const position = 26; // Position in the sampleQlString where suggestions can be expected
             const suggestions = autocomplete.getSuggestions(position);
-            assert.deepStrictEqual(suggestions, ["field1","field2","field3"]);
+            assert.deepStrictEqual(suggestions, ["field2","field1","field3"]);
         });
 
         it('should return an array of suggestions for parameter', function() {

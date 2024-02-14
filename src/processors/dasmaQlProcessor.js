@@ -28,7 +28,7 @@ const dasmaQlProcessor = {
     },
     parameter: (self, type, value) => {
         const parameter = {type: type, value: value};
-        self.validateParameter(parameter)
+        self.validateParameter(parameter);
         return parameter;
     },
     orderBy: (self, field, order, fields) => {
@@ -41,6 +41,6 @@ const dasmaQlProcessor = {
     validateParameter: (parameter) => {},
     validateTerm: (term) => {},
     validateOrder: (order) => {}
-}
+};
 
 module.exports = dasmaQlProcessor;

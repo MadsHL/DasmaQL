@@ -1,28 +1,17 @@
 const {dasmaQlParser, dasmaQlHighlightParser, dasmaQlSuggestionParser} = require("../parsers");
 const {dasmaQlProcessor, dasmaQlHighlightProcessor, dasmaQlSuggestionProcessor} = require("../processors");
-const dasmaQlHighlighter = require("./dasmaQlHighlighter");
 
-class DasmaQl {
+class DasmaQlSyntax {
 
-    #dasmaQlHighlighter
     #invalidFields = [];
-    #invalidFunctions = [];
-    #suggestTokens = [];
-
-    #result = null;
 
     constructor(options) {
         this.options = this.#prepareOptions(options);
         this.syntaxProcessor = this.#configureSyntaxProcessor(this.options);
-        this.#dasmaQlHighlighter = dasmaQlHighlighter(options)
     }
-
 
     parse(qlString) {
         this.#invalidFields = [];
-        this.#invalidFunctions = [];
-
-        const highlight =this.#dasmaQlHighlighter.highlight(qlString);
 
         let model = null;
         let error = null;
@@ -34,24 +23,21 @@ class DasmaQl {
 
         return {
             model,
-            highlight,
             validation: {
                 error,
-                valid: !error && !this.#invalidFields.length && !this.#invalidFunctions.length,
-                invalidFields: this.#invalidFields,
-                invalidFunctions: this.#invalidFunctions,
+                valid: !error && !this.#invalidFields.length,
+                invalidFields: this.#invalidFields
             }
         };
     }
 
     #prepareOptions(options) {
         const validFields = (options?.fields || []).map(field => field.trim());
-        const validFunctions = (options?.functions || []).map(functionName => functionName.replace(/\(\s*\)/, "").trim());
-        return {validFields, validFunctions};
+        return {validFields};
     }
 
     #configureSyntaxProcessor(options) {
-        if (!options.validFields.length && options.validFunctions.length) {
+        if (!options.validFields.length) {
             return dasmaQlProcessor;
         }
 
@@ -59,9 +45,6 @@ class DasmaQl {
         if (options.validFields.length) {
             syntaxProcessor.validateTerm = term => this.#validateTerm(term, options.validFields);
             syntaxProcessor.validateOrder = order => this.#validateOrder(order, options.validFields);
-        }
-        if (options.validFunctions.length) {
-            syntaxProcessor.validateParameter = parameter => this.#validateParameter(parameter, options.validFunctions);
         }
         return syntaxProcessor;
     }
@@ -80,12 +63,6 @@ class DasmaQl {
         }
     }
 
-    #validateParameter(parameter, validFunctions) {
-        if (parameter.type === 'function' && !validFunctions.includes(parameter.value)) {
-            this.#pushIfNotExists(this.#invalidFunctions, parameter.value);
-        }
-    }
-
     #pushIfNotExists(existingArray, element) {
         if (!existingArray.includes(element)) {
             existingArray.push(element);
@@ -93,8 +70,8 @@ class DasmaQl {
     }
 }
 
-function dasmaQl(options) {
-    return new DasmaQl(options);
+function dasmaQlSyntax(options) {
+    return new DasmaQlSyntax(options);
 }
 
-module.exports = dasmaQl;
+module.exports = dasmaQlSyntax;

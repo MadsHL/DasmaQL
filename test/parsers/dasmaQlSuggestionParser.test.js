@@ -65,7 +65,7 @@ describe('Suggestion parsing tests', function () {
         const input = 'field1 = "value1" OR field2 != 2024-12-24 AND (field3 in ("value3.1", "value3.2") OR field4 = value4() AND field5 between (1,9)) ORDER BY field1, field2 asc, field3 desc -- This is a comment';
         const result = dasmaQlSuggestionParser.parse(input, dasmaQlSuggestionProcessor);
         assert.strictEqual(result.length, 18);
-        assert.deepStrictEqual(result.map(t=>t.type),["parameter","misc","parameter","misc","parameter","parameter","misc","parameter","misc","parameter","parameter","misc","field","field","misc","field","misc","comment"])
+        assert.deepStrictEqual(result.map(t=>t.type),["parameter","misc","parameter","misc","parameter","parameter","misc","parameter","misc","parameter","parameter","misc","field","field","misc","field","misc","comment"]);
         assert.deepStrictEqual(result.filter(i => i.type === "parameter").map(i => i.input.type), ["string","date","string","string","function","number","number"]);
     });
 

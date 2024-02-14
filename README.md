@@ -52,75 +52,19 @@ You can install DasmaQL via npm:
 npm install dasmaql
 ```
 
-## Usage
-Once completed, a backend application will demonstrate how to effectively use the result of the DasmaQL parser.
+## Usage and API
+DasmaQL provides a suite of tools to support developers in effectively utilizing the query language. Below are detailed guides and API descriptions for our key modules, designed to assist in implementing autocomplete features, syntax highlighting, and understanding the syntax rules of DasmaQL. Additionally, developers can delve into the technical specifications within our TypeScript declaration files, which are richly commented for deeper insights.
 
-### Parsing a Query
-You can use DasmaQL to parse a DasmaQL query string and obtain a structured model:
-```javascript
-const dasmaQl = require('dasmaql');
+Module Documentation
+* **Autocomplete Module**: The `dasmaQlAutocomplete` module offers suggestions for completing queries based on the current context, significantly speeding up the coding process. [Read the dasmaQlAutocomplete guide](./dasmaQlAutocomplete.md).
+* **Highlighter Module**: With `dasmaQlHighlighter`, developers can implement syntax highlighting to improve code readability and facilitate debugging. [Explore the dasmaQlHighlighter documentation](./dasmaQlHighlighter.md).
+* **Syntax Module**: The `dasmaQlSyntax` module provides a comprehensive overview of DasmaQL's syntax rules, ensuring the creation of valid and efficient queries. [Dive into the dasmaQlSyntax details](./dasmaQlSyntax.md).
 
-const qlString = 'field1 = value1 and field2 > value2';
-const { model, validation } = dasmaQl().parse(qlString);
+### TypeScript Declaration Files
+For an in-depth look at the DasmaQL API, the TypeScript declaration files (*.d.ts) located in the src/modules directory contain extensive JSDoc comments detailing functions, parameters, return types, and more. These files are invaluable for developers seeking to understand the intricacies of the DasmaQL modules.
 
-console.log('Parsed Model:', model);
-console.log('Validation:', validation);
-```
+Navigate to TypeScript Declaration Files: [View TypeScript Declaration Files](./src/modules)
 
-### Highlighting a Query
-DasmaQL also provides a method to highlight a DasmaQL query string:
-```javascript
-const dasmaQl = require('dasmaql');
-
-const qlString = 'field1 = value1 and field2 > value2';
-const highlightedQuery = dasmaQl().highlight(qlString);
-
-console.log('Highlighted Query:', highlightedQuery);
-```
-
-### Parsing a Query with Options
-You can parse a query with custom options to validate against specific fields and functions:
-```javascript
-const dasmaQl = require('dasmaql');
-
-const options = {
-    fields: ['field1', 'field2'],
-    functions: ['function1', 'function2']
-};
-const qlString = 'field1 = function1() and field2 > value';
-const { model, validation } = dasmaQl().parse(qlString, options);
-
-console.log('Parsed Model:', model);
-console.log('Validation:', validation);
-```
-
-## API Reference
-`dasmaQl(options?: object)`
-Initializes `DasmaQl` with the specified options, if any. This function returns an object that provides access to the `parse` and `highlight` methods.
-
-* `options`: An optional object that may contain configuration settings for parsing and highlighting. The structure and specific options for this object will depend on the implementation details of DasmaQl.
-
-
-`parse(qlString: string): { model: object, validation: object }`
-
-Parses the given DasmaQL query string and returns a structured model along with validation details.
-
-* `qlString`: The DasmaQL query string to parse.
-
-`highlight(qlString: string): string`
-
-Highlights the given DasmaQL query string for better readability.
-
-* `qlString`: The DasmaQL query string to highlight.
-
-## Data Structures
-`model`
-
-A structured representation of the parsed DasmaQL query.
-
-`validation`
-
-Validation details including whether the query is valid or not, and any invalid fields or functions encountered during parsing.
 
 ## Contributing to DasmaQL
 
@@ -153,7 +97,7 @@ When submitting a pull request, please keep the following guidelines in mind:
 
 ## Project Details
 - **Name:** DasmaQL
-- **Version:** 0.1.2
+- **Version:** 0.1.4
 - **Description:** Self-contained query tool for data selection with a simple and intuitive language.
 - **Author:** Mads Hansen Lund
 - **License:** GPL-3.0-or-later

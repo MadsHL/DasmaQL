@@ -6,7 +6,7 @@ function parseLocation(location) {
     }
 }
 
-function flattenInput(input, withQoutes) {
+function flattenInput(input) {
     if (!input) {
         return "";
     }
@@ -15,11 +15,7 @@ function flattenInput(input, withQoutes) {
         const flattened = input.reduce((acc, val) => acc.concat(flattenInput(val)), []);
         result = flattened.join("");
     }
-    return withQoutes ? result : cleanString(result);
-}
-
-function cleanString(str) {
-    return str?.replace(/^['"]|['"]$/g, '');
+    return result;
 }
 
 const dasmaQlSuggestionProcessor = {
@@ -33,7 +29,7 @@ const dasmaQlSuggestionProcessor = {
         }
     },
     suggestField: (self, location, input) => {
-        const inputStr = flattenInput(input, self.withQoutes);
+        const inputStr = flattenInput(input);
         return {
             type: "field",
             input: inputStr,
@@ -50,7 +46,7 @@ const dasmaQlSuggestionProcessor = {
                 start: location.end.offset,
                 end: location.end.offset,
             }
-        }
+        };
 
         return {
             type: "parameter",
@@ -61,7 +57,7 @@ const dasmaQlSuggestionProcessor = {
         }
     },
     parameter: (self, location, type, input) => {
-        const parameter = flattenInput(input, self.withQoutes);
+        const parameter = flattenInput(input);
         return {
             value: parameter,
             type: type,
@@ -74,6 +70,6 @@ const dasmaQlSuggestionProcessor = {
     findParameters: (field, parameter) => {
         return [];
     },
-}
+};
 
 module.exports = dasmaQlSuggestionProcessor;

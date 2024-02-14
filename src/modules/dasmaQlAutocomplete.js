@@ -1,18 +1,20 @@
 const {dasmaQlSuggestionParser} = require("../parsers");
 const {dasmaQlSuggestionProcessor, dasmaQlProcessor} = require("../processors");
+const levenshteinDistance = require("./levenshteinDistance");
 
 class DasmaQlAutocomplete {
     #tokens;
     #qlString;
     #autocompleteProcessor;
 
-    constructor(qlString, options) {
-      //  this.options = this.#prepareOptions(options);
-        this.#autocompleteProcessor = this.#configureAutocompleteProcessor(options);
-        this.#init(qlString);
+    constructor(options) {
+        this.options = this.#prepareOptions(options);
+        this.#autocompleteProcessor = this.#configureAutocompleteProcessor(this.options);
+        this.refresh(options?.qlString);
     }
 
-    getSuggestions(position) {
+    getSuggestions(position, qlString) {
+        this.refresh(qlString);
         const token = this.#findTokenAtPosition(position);
         if(!token?.suggestions) {
             return [];
@@ -21,15 +23,23 @@ class DasmaQlAutocomplete {
         return typeof token.suggestions === 'function' ? token.suggestions() : token.suggestions;
     }
 
-    insertSuggestion(position, suggested) {
+    insertSuggestion(position, suggested, qlString) {
+        this.refresh(qlString);
         const token = this.#findTokenAtPosition(position);
         if(!token) {
             return this.#qlString;
         }
 
-        const qlString = this.#replaceToken(this.#qlString, token, suggested)
-        this.#init(qlString);
-        return qlString;
+        const qlStringWithReplaced = this.#replaceToken(this.#qlString, token, suggested);
+        this.refresh(qlStringWithReplaced);
+        return qlStringWithReplaced;
+    }
+
+    refresh(qlString) {
+        if(qlString?.length > 0 && this.#qlString !== qlString) {
+            this.#qlString = qlString;
+            this.#tokens = dasmaQlSuggestionParser.parse(qlString, this.#autocompleteProcessor);
+        }
     }
 
     #findTokenAtPosition(position) {
@@ -76,25 +86,54 @@ class DasmaQlAutocomplete {
         return qlString.substring(0, token.location.start) + replacement + qlString.substring(token.location.end);
     }
 
-    #init(qlString) {
-        this.#qlString = qlString;
-        this.#tokens = dasmaQlSuggestionParser.parse(qlString, this.#autocompleteProcessor);
-    }
-
     #configureAutocompleteProcessor(options) {
         const autocompleteProcessor = Object.assign({}, dasmaQlSuggestionProcessor);
 
         autocompleteProcessor.withQoutes = false;
-        autocompleteProcessor.findFields = options?.callbackSearchField || (() => []);
-        autocompleteProcessor.findParameters = options?.callbackSearchParameter || (() => []);
+        autocompleteProcessor.findFields = (search) => { return this.#searchField(this.#cleanString(search)) };
+        autocompleteProcessor.findParameters = (field, search) => options.callbackSearchParameter(
+            this.#cleanString(field),
+            this.#cleanString(search)
+        );
 
         return autocompleteProcessor;
+    }
+
+    #searchField(search) {
+        if(!search) {
+            return this.options.fields.slice(0, this.options.maxSuggestionsFields);
+        }
+
+        return this.options?.fields
+            .map((field) => ({
+                field,
+                distance: levenshteinDistance(field, search),
+            }))
+            .filter(({ distance, field }) => distance < search.length || distance < field.length)
+            .sort((a, b) =>
+                a.distance === b.distance
+                    ? a.field.localeCompare(b.field)
+                    : a.distance - b.distance
+            )
+            .map(({ field }) => field)
+            .slice(0, this.options.maxSuggestionsFields);
+    }
+
+    #cleanString(str) {
+        return str?.replace(/^['"]|['"]$/g, '');
+    }
+    #prepareOptions(options) {
+        const fields = (options?.fields || []).map(field => field.trim()).sort();
+        const callbackSearchParameter = options?.callbackSearchParameter || (() => []);
+        const maxSuggestionsFields = options?.maxSuggestionsFields || 10;
+
+        return {fields, callbackSearchParameter, maxSuggestionsFields};
     }
 }
 
 
-function dasmaQlAutocomplete(qlString, options) {
-    return new DasmaQlAutocomplete(qlString, options);
+function dasmaQlAutocomplete(options) {
+    return new DasmaQlAutocomplete(options);
 }
 
 
