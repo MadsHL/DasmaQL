@@ -41,7 +41,7 @@ class DasmaQlHighlighter {
         if(this.#skip(token, evaluation)) {
             return evaluation;
         }
-        const cssError = this.#validate(token) ? `${this.options.prefixClass}-error` : '';
+        const cssError = this.#validate(token) ? '' : `${this.options.prefixClass}-error`;
         const cssClass = `${this.options.prefixClass}-${clazz} ${cssError}`;
 
         const replacement = `<${this.options.htmlWrapper} class="${cssClass}">${this.#getValue(token)}</${this.options.htmlWrapper}>`;
@@ -93,7 +93,7 @@ class DasmaQlHighlighter {
 
     #validateField(token) {
         let valid = true;
-        if(this.options?.validFields && token?.input) {
+        if(this.options?.validFields?.length > 0 && token?.input) {
             valid &= this.options?.validFields?.includes(this.#cleanString(token.input));
         }
         return valid;
