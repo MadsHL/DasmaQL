@@ -82,11 +82,14 @@ Operator
   }
 
 Term
-  = field:Field __ operator:Operator __ parameter:Parameter {
-      return options.suggestParameter(options, location(), field, operator, parameter)
+  = field:Field _ operator:(Like/NotLike) _ parameter:Parameter {
+     return options.suggestParameter(options, location(), field, operator, parameter);
   }
-  / field:Field _ operator:ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
+  /field:Field _ operator:ComplexOperator _ [(\[]* __ parameters:Parameters? [)\]]* {
       return parameters.map(parameter => options.suggestParameter(options, location(), field, operator, parameter));
+  }
+  / field:Field __ operator:Operator __ parameter:Parameter {
+      return options.suggestParameter(options, location(), field, operator, parameter)
   }
   / field:Field _ (ComplexOperator)
   / field:Field __ (Operator)?

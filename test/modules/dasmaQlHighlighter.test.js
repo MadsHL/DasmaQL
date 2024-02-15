@@ -7,7 +7,7 @@ describe('DasmaQlHighlighter', function () {
         const qlString = "field1 = 'value' and field2 > 10";
         const highlighted = highlighter.highlight(qlString);
 
-        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator dasma-error\">=</span> <span class=\"dasma-string dasma-error\">&apos;value&apos;</span> <span class=\"dasma-misc dasma-error\">and</span> <span class=\"dasma-field \">field2</span> <span class=\"dasma-operator dasma-error\">&gt;</span> <span class=\"dasma-number dasma-error\">10</span>")
+        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator \">=</span> <span class=\"dasma-string \">&apos;value&apos;</span> <span class=\"dasma-misc \">and</span> <span class=\"dasma-field \">field2</span> <span class=\"dasma-operator \">&gt;</span> <span class=\"dasma-number \">10</span>")
     });
 
     it('should apply custom HTML wrapper and prefix class correctly', () => {
@@ -19,7 +19,7 @@ describe('DasmaQlHighlighter', function () {
         const qlString = "field1 = 'value'";
         const highlighted = highlighter.highlight(qlString);
 
-        assert.strictEqual(highlighted, "<div class=\"custom-field \">field1</div> <div class=\"custom-operator custom-error\">=</div> <div class=\"custom-string custom-error\">&apos;value&apos;</div>")
+        assert.strictEqual(highlighted, "<div class=\"custom-field \">field1</div> <div class=\"custom-operator \">=</div> <div class=\"custom-string \">&apos;value&apos;</div>")
     });
 
     it('should not highlight invalid fields when valid fields are specified', () => {
@@ -30,7 +30,7 @@ describe('DasmaQlHighlighter', function () {
         const qlString = "field1 = 'value' and field2 > 10";
         const highlighted = highlighter.highlight(qlString);
 
-        assert.strictEqual(highlighted, "<span class=\"dasma-field dasma-error\">field1</span> <span class=\"dasma-operator dasma-error\">=</span> <span class=\"dasma-string dasma-error\">&apos;value&apos;</span> <span class=\"dasma-misc dasma-error\">and</span> <span class=\"dasma-field \">field2</span> <span class=\"dasma-operator dasma-error\">&gt;</span> <span class=\"dasma-number dasma-error\">10</span>")
+        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator \">=</span> <span class=\"dasma-string \">&apos;value&apos;</span> <span class=\"dasma-misc \">and</span> <span class=\"dasma-field dasma-error\">field2</span> <span class=\"dasma-operator \">&gt;</span> <span class=\"dasma-number \">10</span>")
     });
 
     it('should escape HTML in input correctly', () => {
@@ -38,7 +38,7 @@ describe('DasmaQlHighlighter', function () {
         const qlString = "field1 = '<script>alert(\"xss\")</script>'";
         const highlighted = highlighter.highlight(qlString);
 
-        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator dasma-error\">=</span> <span class=\"dasma-string dasma-error\">&apos;&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;&apos;</span>")
+        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator \">=</span> <span class=\"dasma-string \">&apos;&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;&apos;</span>")
     });
 
     it('should handle complex queries with multiple operators and functions', () => {
@@ -51,6 +51,6 @@ describe('DasmaQlHighlighter', function () {
         const highlighted = highlighter.highlight(qlString);
 
         // Check for highlighting of fields, functions, and operators
-        assert.strictEqual(highlighted, "<span class=\"dasma-field dasma-error\">field1</span> <span class=\"dasma-operator dasma-error\">=</span> <span class=\"dasma-function dasma-error\">validFunction()</span> <span class=\"dasma-misc dasma-error\">and</span> <span class=\"dasma-field dasma-error\">field2</span> <span class=\"dasma-operator dasma-error\">not like</span> <span class=\"dasma-string dasma-error\">&apos;text&apos;</span> <span class=\"dasma-field \">and</span> <span class=\"dasma-field dasma-error\">field3</span> <span class=\"dasma-operator dasma-error\">not between</span> (<span class=\"dasma-number dasma-error\">1</span>, <span class=\"dasma-number dasma-error\">22.2</span>) <span class=\"dasma-misc dasma-error\">order by</span> <span class=\"dasma-field dasma-error\">field1</span>, <span class=\"dasma-field dasma-error\">field2</span>")
+        assert.strictEqual(highlighted, "<span class=\"dasma-field \">field1</span> <span class=\"dasma-operator \">=</span> <span class=\"dasma-function \">validFunction()</span> <span class=\"dasma-misc \">and</span> <span class=\"dasma-field \">field2</span> <span class=\"dasma-operator \">not like</span> <span class=\"dasma-string \">&apos;text&apos;</span> <span class=\"dasma-misc \">and</span> <span class=\"dasma-field \">field3</span> <span class=\"dasma-operator \">not between</span> (<span class=\"dasma-number \">1</span>, <span class=\"dasma-number \">22.2</span>) <span class=\"dasma-misc \">order by</span> <span class=\"dasma-field \">field1</span>, <span class=\"dasma-field \">field2</span>")
     });
 });
