@@ -35,6 +35,14 @@ declare module 'dasmaQlAutocomplete' {
         constructor(options: DasmaQlAutocompleteOptions);
 
         /**
+         * Gets the input string at the specified position in the DasmaQL query string.
+         * @param position The cursor position within the query string.
+         * @param qlString The DasmaQL query string (optional, defaults to initial qlString).
+         * @returns The string at the specified position.
+         */
+        getInput(position: number, qlString?: string): string;
+
+        /**
          * Gets autocomplete suggestions based on position and query string.
          * @param position The cursor position within the query string.
          * @param qlString The DasmaQL query string (optional, defaults to initial qlString).

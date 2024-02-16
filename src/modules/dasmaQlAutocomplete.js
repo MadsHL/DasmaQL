@@ -13,6 +13,11 @@ class DasmaQlAutocomplete {
         this.refresh(options?.qlString);
     }
 
+    getInput(position, qlString) {
+        this.refresh(qlString);
+        const token = this.#findTokenAtPosition(position);
+        return token?.input;
+    }
     getSuggestions(position, qlString) {
         this.refresh(qlString);
         const token = this.#findTokenAtPosition(position);

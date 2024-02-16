@@ -136,6 +136,8 @@ Time
 String
   = '"' string:DoubleQuotedChars '"'? { return string }
   / "'" string:SingleQuotedChars "'"? { return string }
+  / "''" { return "" }
+  / '""' { return "" }
 
 DoubleQuotedChars
   = char:[^"\r\n]+ { return char.join(""); }
@@ -144,10 +146,10 @@ SingleQuotedChars
   = char:[^'\r\n]+ { return char.join(""); }
 
 __ "optional whitespace"
-  = ([ \t\r\n]*)
+  = [ \t\r\n\u00A0\u2003\u2002\u2007\u202F\u200A\u3000\u205F\u2009\u200B]*
 
 _ "required whitespace"
-  = ([ \t\r\n]+)
+  = [ \t\r\n\u00A0\u2003\u2002\u2007\u202F\u200A\u3000\u205F\u2009\u200B]+
 
 Comment
   = __ ("#" / "--") [^\r\n]* { }

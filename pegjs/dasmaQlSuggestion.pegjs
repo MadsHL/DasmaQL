@@ -21,7 +21,7 @@ Logic
   = LogicExpression _? Logic?
 
 LogicExpression
-  = Term ((_ (Or / And) _ / _ OrOrder / _ OrderBy _? OrderByTerms?/_ (Or / And)?))?
+  = Term ((_ (Or / And) _ / _ OrderBy _? OrderByTerms?/ _ OrOrder / _ (Or / And)?))?
 
 FieldExpression
   = Term / __ Field _? (Operator / ComplexOperator)?
@@ -130,6 +130,8 @@ Integer
 
 String
   = (DoubleQuotedString / SingleQuotedString) { return text(); }
+  / "''" { return text(); }
+  / '""' { return text(); }
 
 DoubleQuotedString
   = ('"' string:DoubleQuotedChars '"'?) { return text(); }
@@ -174,7 +176,7 @@ Comment
   = input:(("#" / "--") [^\r\n]*) { return options.suggest(location(), input, [], "comment") }
 
 __ "optional whitespace"
-  = [ \t\r\n]*
+  = [ \t\r\n\u00A0\u2003\u2002\u2007\u202F\u200A\u3000\u205F\u2009\u200B]*
 
 _ "required whitespace"
-  = [ \t\r\n]+
+  = [ \t\r\n\u00A0\u2003\u2002\u2007\u202F\u200A\u3000\u205F\u2009\u200B]+
