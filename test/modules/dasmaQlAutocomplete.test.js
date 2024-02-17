@@ -20,6 +20,12 @@ describe('DasmaQlAutocomplete', function() {
     });
 
     describe('#getSuggestions()', function() {
+        it('asddassa', function() {
+            const position = 12; // Position in the sampleQlString where suggestions can be expected
+            const suggestions = autocomplete.getInput(position);
+            assert.deepStrictEqual(suggestions, ["field2","field1","field3"]);
+        });
+
         it('should return an array of suggestions for field', function() {
             const position = 26; // Position in the sampleQlString where suggestions can be expected
             const suggestions = autocomplete.getSuggestions(position);

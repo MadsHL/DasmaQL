@@ -37,9 +37,9 @@ const levenshteinSearchSort = (elements, search) => {
     // Helper function to get element's label in lowercase
     const getElementLabelLower = (element) => {
         if (typeof element === 'object' && element.label) {
-            return element.label.toLowerCase();
+            return element.label;
         } else if (typeof element === 'string') {
-            return element.toLowerCase();
+            return element;
         }
         return '';
     };
@@ -47,11 +47,15 @@ const levenshteinSearchSort = (elements, search) => {
     return elements
         .map((element) => ({
             element,
-            distance: levenshteinDistance(getElementLabelLower(element), searchLower),
+            label: getElementLabelLower(element).toLowerCase(),
         }))
-        .filter(({distance, element}) => {
-            const elementLength = getElementLabelLower(element).length;
-            return distance < search.length || distance < elementLength;
+        .map(element => ({
+            ...element,
+            distance: levenshteinDistance(element.label, searchLower) - (element.label.length - searchLower.length),
+        }))
+
+        .filter(({distance}) => {
+            return distance < search.length;
         })
         .sort((a, b) => {
             if (a.distance === b.distance) {

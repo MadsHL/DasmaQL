@@ -30,12 +30,12 @@ describe('Levenshtein Tests', () => {
 
         it('should correctly sort elements based on Levenshtein distance to the search term', () => {
             const sortedElements = levenshteinSearchSort(elements, 'Apple');
-            assert.deepEqual(sortedElements, [{"label":"Apple"},"Date",{"label":"Grape"},"Banana",{"label":"Elderberry"}]);
+            assert.deepEqual(sortedElements, [{"label":"Apple"},"Banana",{"label":"Elderberry"},{"label":"Grape"}]);
         });
 
         it('should limit the number of suggestions based on maxSuggestions', () => {
             const sortedElements = levenshteinSearchSort(elements, 'Banana');
-            assert.deepEqual(sortedElements, ["Banana",{"label":"Apple"},"Date",{"label":"Grape"}]);
+            assert.deepEqual(sortedElements, ["Banana"]);
         });
 
         it('should return elements sorted alphabetically if distances are equal', () => {
@@ -45,7 +45,7 @@ describe('Levenshtein Tests', () => {
 
         it('should handle empty search term correctly', () => {
             const sortedElements = levenshteinSearchSort(elements, '', 5);
-            assert.strictEqual(sortedElements.length, 0);
+            assert.deepEqual(sortedElements, []);
         });
     });
 });
