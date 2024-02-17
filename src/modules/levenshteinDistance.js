@@ -31,4 +31,39 @@ const levenshteinDistance = (a, b) => {
     return matrix[b.length][a.length];
 };
 
-module.exports = levenshteinDistance;
+const levenshteinSearchSort = (elements, search) => {
+    const searchLower = search.toLowerCase();
+
+    // Helper function to get element's label in lowercase
+    const getElementLabelLower = (element) => {
+        if (typeof element === 'object' && element.label) {
+            return element.label.toLowerCase();
+        } else if (typeof element === 'string') {
+            return element.toLowerCase();
+        }
+        return '';
+    };
+
+    return elements
+        .map((element) => ({
+            element,
+            distance: levenshteinDistance(getElementLabelLower(element), searchLower),
+        }))
+        .filter(({distance, element}) => {
+            const elementLength = getElementLabelLower(element).length;
+            return distance < search.length || distance < elementLength;
+        })
+        .sort((a, b) => {
+            if (a.distance === b.distance) {
+                return getElementLabelLower(a.element).localeCompare(getElementLabelLower(b.element));
+            }
+            return a.distance - b.distance;
+        })
+        .map(({element}) => element);
+};
+
+
+module.exports = {
+    levenshteinDistance,
+    levenshteinSearchSort
+};

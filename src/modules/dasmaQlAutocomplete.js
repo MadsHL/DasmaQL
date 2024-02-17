@@ -1,6 +1,7 @@
 const {dasmaQlSuggestionParser} = require("../parsers");
 const {dasmaQlSuggestionProcessor, dasmaQlProcessor} = require("../processors");
 const levenshteinDistance = require("./levenshteinDistance");
+const {levenshteinSearchSort} = require("./levenshteinDistance");
 
 class DasmaQlAutocomplete {
     #tokens;
@@ -109,19 +110,8 @@ class DasmaQlAutocomplete {
             return this.options.fields.slice(0, this.options.maxSuggestionsFields);
         }
 
-        return this.options?.fields
-            .map((field) => ({
-                field,
-                distance: levenshteinDistance(field, search),
-            }))
-            .filter(({ distance, field }) => distance < search.length || distance < field.length)
-            .sort((a, b) =>
-                a.distance === b.distance
-                    ? a.field.localeCompare(b.field)
-                    : a.distance - b.distance
-            )
-            .map(({ field }) => field)
-            .slice(0, this.options.maxSuggestionsFields);
+        return levenshteinSearchSort(this.options.fields, search).slice(0, this.options.maxSuggestionsFields);
+
     }
 
     #cleanString(str) {

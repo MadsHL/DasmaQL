@@ -3,12 +3,12 @@
         let flatList = [];
         for (const expr of expressions) {
             if (Array.isArray(expr)) {
-                flatList.push(...flattenExpressions(expr)); // Rekursivt flade dybere arrays ud
+                flatList.push(...flattenExpressions(expr));
             } else if (expr && typeof expr === 'object') {
-                flatList.push(expr); // Tilføj ikke-null udtryk direkte til listen
+                flatList.push(expr);
             }
         }
-        return flatList.filter(e => e !== null && e !== undefined); // Fjern null/undefined værdier
+        return flatList.filter(e => e !== null && e !== undefined);
     }
 }}
 
@@ -21,7 +21,7 @@ Logic
   = LogicExpression _? Logic?
 
 LogicExpression
-  = Term ((_ (Or / And) _ / _ OrderBy _? OrderByTerms?/ _ OrOrder / _ (Or / And)?))?
+  = Term ((_ (Or / And) _ / _ OrOrder / _ OrderBy _? OrderByTerms?/_ (Or / And)?))?
 
 FieldExpression
   = Term / __ Field _? (Operator / ComplexOperator)?
@@ -77,8 +77,8 @@ ComplexOperator
   / NotIn
 
 Operator
-  = input:("!" "="? / (">" "="?) / "<" ("="?/">"?) / "~" "="? / "=") {
-    return options.suggest(location(), input, ["=", "!=", "<>", ">=", "<=", ">", "<", "~"]);
+  = input:("!" "="? / (">" "="?) / ("<" ("="/">")?) / "~" "="? / "=") {
+     return options.suggest(location(), text(), ["=", "!=", "<>", ">=", "<=", ">", "<", "~"]);
   }
 
 Term
@@ -173,7 +173,7 @@ FallBack
   = . { return null }
 
 Comment
-  = input:(("#" / "--") [^\r\n]*) { return options.suggest(location(), input, [], "comment") }
+  = input:(("#" / "--") [^\r\n]*) { return options.suggest(location(), text(), [], "comment") }
 
 __ "optional whitespace"
   = [ \t\r\n\u00A0\u2003\u2002\u2007\u202F\u200A\u3000\u205F\u2009\u200B]*

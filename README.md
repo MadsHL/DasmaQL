@@ -97,7 +97,7 @@ When submitting a pull request, please keep the following guidelines in mind:
 
 ## Project Details
 - **Name:** DasmaQL
-- **Version:** 0.1.4
+- **Version:** 0.1.9
 - **Description:** Self-contained query tool for data selection with a simple and intuitive language.
 - **Author:** Mads Hansen Lund
 - **License:** GPL-3.0-or-later
