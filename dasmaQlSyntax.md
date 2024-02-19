@@ -1,21 +1,22 @@
 # DasmaQlSyntax
+
 A module for parsing and validating DasmaQL queries.
 
 ## Usage
 
 ```typescript
-import {dasmaQlSyntax} from 'dasmaQl';
+import { dasmaQlSyntax } from "dasmaQl";
 
 // Configure DasmaQlSyntax
 const options: DasmaQlSyntaxOptions = {
-    fields: ['field1', 'field2', 'field3']
+  fields: ["field1", "field2", "field3"],
 };
 
 // Create a new instance of DasmaQlSyntax
 const parser = dasmaQlSyntax(options);
 
 // Parse a DasmaQL query string
-const qlString = '...';
+const qlString = "...";
 const result: ParsedModel = parser.parse(qlString);
 
 console.log(result.model);

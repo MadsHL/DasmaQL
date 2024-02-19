@@ -1,73 +1,72 @@
 /**
  * Declaration file for the 'dasmaQlSyntax' module.
  */
-declare module 'dasmaQlSyntax' {
+declare module "dasmaQlSyntax" {
+  /**
+   * Options for configuring DasmaQlSyntax.
+   */
+  interface DasmaQlSyntaxOptions {
     /**
-     * Options for configuring DasmaQlSyntax.
+     * An array of valid fields for the DasmaQL syntax.
      */
-    interface DasmaQlSyntaxOptions {
-        /**
-         * An array of valid fields for the DasmaQL syntax.
-         */
-        fields?: string[];
-    }
+    fields?: string[];
+  }
 
+  /**
+   * Result of the validation process.
+   */
+  interface ValidationResult {
     /**
-     * Result of the validation process.
+     * Error object if validation failed, otherwise null.
      */
-    interface ValidationResult {
-        /**
-         * Error object if validation failed, otherwise null.
-         */
-        error: Error | null;
-        /**
-         * Indicates whether the validation succeeded.
-         */
-        valid: boolean;
-        /**
-         * Array of invalid fields found during validation.
-         */
-        invalidFields: string[];
-    }
-
+    error: Error | null;
     /**
-     * Represents the parsed model with validation results.
+     * Indicates whether the validation succeeded.
      */
-    interface ParsedModel {
-        /**
-         * The parsed model.
-         */
-        model: any;
-        /**
-         * Validation results of the parsed model.
-         */
-        validation: ValidationResult;
-    }
-
+    valid: boolean;
     /**
-     * DasmaQlSyntax class for parsing DasmaQL queries.
+     * Array of invalid fields found during validation.
      */
-    class DasmaQlSyntax {
-        /**
-         * Constructs a new DasmaQlSyntax instance.
-         * @param options The options to configure DasmaQlSyntax.
-         */
-        constructor(options: DasmaQlSyntaxOptions);
+    invalidFields: string[];
+  }
 
-        /**
-         * Parses a DasmaQL query string.
-         * @param qlString The DasmaQL query string to parse.
-         * @returns The parsed model with validation results.
-         */
-        parse(qlString: string): ParsedModel;
-    }
-
+  /**
+   * Represents the parsed model with validation results.
+   */
+  interface QlModel {
     /**
-     * Factory function for creating DasmaQlSyntax instances.
+     * The parsed model.
+     */
+    model: any;
+    /**
+     * Validation results of the parsed model.
+     */
+    validation: ValidationResult;
+  }
+
+  /**
+   * DasmaQlSyntax class for parsing DasmaQL queries.
+   */
+  class DasmaQlSyntax {
+    /**
+     * Constructs a new DasmaQlSyntax instance.
      * @param options The options to configure DasmaQlSyntax.
-     * @returns A new DasmaQlSyntax instance.
      */
-    function dasmaQlSyntax(options: DasmaQlSyntaxOptions): DasmaQlSyntax;
+    constructor(options: DasmaQlSyntaxOptions);
 
-    export = dasmaQlSyntax;
+    /**
+     * Parses a DasmaQL query string.
+     * @param qlString The DasmaQL query string to parse.
+     * @returns The parsed model with validation results.
+     */
+    parse(qlString: string): QlModel;
+  }
+
+  /**
+   * Factory function for creating DasmaQlSyntax instances.
+   * @param options The options to configure DasmaQlSyntax.
+   * @returns A new DasmaQlSyntax instance.
+   */
+  function dasmaQlSyntax(options: DasmaQlSyntaxOptions): DasmaQlSyntax;
 }
+export = { dasmaQlSyntax };

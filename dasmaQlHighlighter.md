@@ -7,17 +7,18 @@ A module for highlighting DasmaQL queries.
 To use the DasmaQlHighlighter module, first import the module and create an instance by passing in configuration options:
 
 ```javascript
-import { dasmaQlHighlighter } from 'dasmaQl';
+import { dasmaQlHighlighter } from "dasmaQl";
 
 const options = {
-  htmlWrapper: 'span',
-  prefixClass: 'highlight',
-  fields: ['name', 'description', 'tags']
+  htmlWrapper: "span",
+  prefixClass: "highlight",
+  fields: ["name", "description", "tags"],
 };
 
 const highlighter = dasmaQlHighlighter(options);
 
-const query = 'name = function() and description not like "text" and tags not between (1,22.2) order by name, tags';
+const query =
+  'name = function() and description not like "text" and tags not between (1,22.2) order by name, tags';
 const highlightedQuery = highlighter.highlight(query);
 
 console.log(highlightedQuery);
@@ -25,6 +26,7 @@ console.log(highlightedQuery);
 ```
 
 ## API
+
 ### `DasmaQlHighlighter`
 
 DasmaQlHighlighter class for providing highlight functionality.
@@ -40,6 +42,7 @@ Options for configuring the DasmaQlHighlighter.
 ### `DasmaQlHighlighter`
 
 DasmaQlHighlighter class for providing autocomplete functionality.
+
 #### `constructor(options: DasmaQlHighlighterOptions)`
 
 Constructs a new DasmaQlHighlighter instance.

@@ -7,15 +7,15 @@ This module provides autocomplete functionality for the DasmaQL query language.
 To use the DasmaQlAutocomplete module, first import the module and create an instance by passing in configuration options:
 
 ```javascript
-import { dasmaQlAutocomplete } from 'dasmaQl';
+import { dasmaQlAutocomplete } from "dasmaQl";
 
 const options = {
-  fields: ['field1', 'field2', 'field3'],
+  fields: ["field1", "field2", "field3"],
   callbackSearchParameter: () => {
     // return search parameters
   },
   maxSuggestionsFields: 5,
-  qlString: '[Your Initial DasmaQL Query String]'
+  qlString: "[Your Initial DasmaQL Query String]",
 };
 
 const autocomplete = dasmaQlAutocomplete(options);
@@ -39,7 +39,7 @@ To insert a suggestion into the query string at a specific position, use the `in
 
 ```javascript
 const position = 10;
-const suggested = 'field1';
+const suggested = "field1";
 
 const modifiedQlString = autocomplete.insertSuggestion(position, suggested);
 ```
@@ -51,12 +51,13 @@ The `qlString` parameter is optional and defaults to the initial qlString passed
 To refresh the autocomplete with a new query string, use the `refresh` method:
 
 ```javascript
-const newQlString = '[Your New DasmaQL Query String]';
+const newQlString = "[Your New DasmaQL Query String]";
 
 autocomplete.refresh(newQlString);
 ```
 
 ## API
+
 ### `DasmaQlAutocompleteOptions`
 
 Options for configuring DasmaQlAutocomplete.

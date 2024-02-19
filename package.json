@@ -1,11 +1,15 @@
 {
   "name": "dasmaql",
-  "version": "0.1.14",
+  "version": "0.2.1",
   "description": "Self-contained query tool for data selection with a simple and intuitive language.",
-  "main": "src/index.js",
+  "main": "src/index.mjs",
+  "test-main": "test/**.js",
+  "type": "module",
   "scripts": {
     "build-parsers": "node build-parsers.js",
-    "test": "npm run build-parsers && mocha test/**/*.js"
+    "test": "npm run build-parsers && mocha test/**/*.js",
+    "lint": "prettier --check . && eslint .",
+    "format": "prettier --write ."
   },
   "keywords": [
     "Dasma",
@@ -33,8 +37,13 @@
   "author": "Mads Hansen Lund",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.2",
+    "@typescript-eslint/parser": "^7.0.2",
     "assert": "^2.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "mocha": "^10.2.0",
-    "peggy": "^3.0.2"
+    "peggy": "^3.0.2",
+    "prettier": "^3.1.1"
   }
 }
