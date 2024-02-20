@@ -1,15 +1,20 @@
-import { dasmaQlAutocomplete } from "./modules/dasmaQlAutocomplete";
-import { dasmaQlHighlighter } from "./modules/dasmaQlHighlighter";
-import { dasmaQlSyntax } from "./modules/dasmaQlSyntax";
-import {
+export {
+  dasmaQlAutocomplete,
+  QlAutocomplete,
+  QlAutocompleteOptions,
+} from "./modules/dasmaQlAutocomplete";
+export {
+  dasmaQlHighlighter,
+  QlHighlighter,
+  QlHighlighterOptions,
+} from "./modules/dasmaQlHighlighter";
+export {
+  dasmaQlSyntax,
+  QlModel,
+  QlSyntax,
+  ValidationResult,
+} from "./modules/dasmaQlSyntax";
+export {
   levenshteinDistance,
   levenshteinSearchSort,
 } from "./modules/levenshteinDistance";
-
-export {
-  dasmaQlAutocomplete,
-  dasmaQlHighlighter,
-  dasmaQlSyntax,
-  levenshteinDistance,
-  levenshteinSearchSort,
-};
