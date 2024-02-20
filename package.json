@@ -1,6 +1,6 @@
 {
   "name": "dasmaql",
-  "version": "0.2.1",
+  "version": "0.2.16",
   "description": "Self-contained query tool for data selection with a simple and intuitive language.",
   "main": "src/index.mjs",
   "test-main": "test/**.js",
